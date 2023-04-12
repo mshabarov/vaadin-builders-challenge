@@ -1,6 +1,8 @@
 package org.teamhq.components;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,12 +14,11 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class DayComponent extends VerticalLayout {
 
-    private Div titleComponent;
+    private LocalDate date;
     private Button addButton;
 
     private int counter = 0;
@@ -28,7 +29,8 @@ public class DayComponent extends VerticalLayout {
 
     private VerticalLayout mealsContainer;
 
-    public DayComponent(String title) {
+    public DayComponent(LocalDate date, Collection<MealStub> meals) {
+        this.date = date;
         Icon addIcon = new Icon(VaadinIcon.PLUS);
         addButton = new Button(addIcon);
         addButton.addClickListener(click -> {
@@ -41,19 +43,17 @@ public class DayComponent extends VerticalLayout {
 
         addButton.setWidthFull();
 
-        titleComponent = new Div();
-        titleComponent.setText(title);
+        Div titleComponent = new Div();
+        titleComponent.setText(date.toString());
 
         mealsContainer = new VerticalLayout();
         mealsContainer.setAlignItems(Alignment.CENTER);
         mealsContainer.setHeight(MEALS_HEIGHT + "px");
+        meals.forEach(this::addMeal);
 
-        add(titleComponent, addButton, mealsContainer);
-
-        getStyle().set("border", "dashed 2px green");
         setWidth("200px");
-        setHeight("400px");
-        getStyle().set("border-radius", "5px");
+        setClassName("day-component");
+        add(titleComponent, addButton, mealsContainer);
     }
 
     public void addMeal(MealStub meal) {
@@ -77,5 +77,9 @@ public class DayComponent extends VerticalLayout {
         } else {
             mealsContainer.add(meal);
         }
+    }
+
+    public void removeMeal(MealStub meal) {
+        mealsContainer.remove(meal);
     }
 }

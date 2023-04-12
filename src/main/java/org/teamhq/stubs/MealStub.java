@@ -11,13 +11,10 @@ public class MealStub extends Div {
     public static final int HEIGHT = 50;
 
     public MealStub(LocalDateTime from, LocalDateTime to) {
-        setWidth("150px");
-        setHeight(HEIGHT + "px");
         setText("Some Meal");
-        getStyle().set("background", "#00FF00");
-
         this.from = from;
         this.to = to;
+        addClassName("meal-component");
     }
 
     public LocalDateTime getFrom() {
