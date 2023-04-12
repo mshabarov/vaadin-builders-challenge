@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface MealChoiceRepository extends JpaRepository<MealChoice, Long>, JpaSpecificationExecutor<MealChoice> {
 
-    List<MealChoice> getMealChoicesByMealAndUser(Meal meal, User user);
+    MealChoice getMealChoiceByMealAndUser(Meal meal, User user);
 
     List<MealChoice> getMealChoicesByMeal(Meal meal);
 }

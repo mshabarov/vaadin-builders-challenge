@@ -1,5 +1,6 @@
 package org.teamhq.views;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -24,6 +25,7 @@ import org.teamhq.components.appnav.AppNavItem;
 import org.teamhq.data.entity.User;
 import org.teamhq.security.AuthenticatedUser;
 import org.teamhq.views.event.EventView;
+import org.teamhq.views.profile.ProfileView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
@@ -104,6 +106,9 @@ public class MainLayout extends AppLayout {
             div.getElement().getStyle().set("align-items", "center");
             div.getElement().getStyle().set("gap", "var(--lumo-space-s)");
             userName.add(div);
+            userName.getSubMenu().addItem("Profile", e -> {
+                UI.getCurrent().navigate(ProfileView.class);
+            });
             userName.getSubMenu().addItem("Sign out", e -> {
                 authenticatedUser.logout();
             });
