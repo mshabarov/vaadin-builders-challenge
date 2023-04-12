@@ -1,14 +1,11 @@
 package org.teamhq.data.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class MealVendor {
-    @Id
-    private Number id;
+public class MealVendor extends AbstractEntity {
 
     @ManyToOne
     @NotNull
@@ -17,14 +14,6 @@ public class MealVendor {
     @ManyToOne
     @NotNull
     private Vendor vendor;
-
-    public Number getId() {
-        return id;
-    }
-
-    public void setId(Number id) {
-        this.id = id;
-    }
 
     public Meal getMeal() {
         return meal;

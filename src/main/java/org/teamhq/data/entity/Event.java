@@ -3,15 +3,12 @@ package org.teamhq.data.entity;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
-public class Event {
-    @Id
-    private Number id;
+public class Event extends AbstractEntity {
 
     @NotEmpty
     private String name;
@@ -23,14 +20,6 @@ public class Event {
 
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime endDateTime;
-
-    public Number getId() {
-        return id;
-    }
-
-    public void setId(Number id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

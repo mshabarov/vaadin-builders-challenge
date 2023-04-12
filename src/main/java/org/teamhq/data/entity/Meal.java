@@ -4,16 +4,13 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
-public class Meal {
-    @Id
-    private Number id;
+public class Meal extends AbstractEntity {
 
     @ManyToOne
     private Event event;
@@ -31,14 +28,6 @@ public class Meal {
 
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime freezeDateTime;
-
-    public Number getId() {
-        return id;
-    }
-
-    public void setId(Number id) {
-        this.id = id;
-    }
 
     public Event getEvent() {
         return event;

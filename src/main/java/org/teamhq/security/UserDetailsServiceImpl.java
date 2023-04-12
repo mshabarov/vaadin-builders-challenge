@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.teamhq.data.entity.User;
-import org.teamhq.data.service.UserRepository;
+import org.teamhq.data.repository.UserRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
