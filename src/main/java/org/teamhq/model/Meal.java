@@ -1,6 +1,7 @@
 package org.teamhq.model;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -22,11 +23,14 @@ public class Meal {
 
     private String description;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime startDateTime;
+    @Temporal(TemporalType.TIME)
+    private LocalTime startTime;
+
+    @Temporal(TemporalType.TIME)
+    private LocalTime endTime;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime endDateTime;
+    private LocalDateTime freezeDateTime;
 
     public Number getId() {
         return id;
@@ -60,19 +64,27 @@ public class Meal {
         this.description = description;
     }
 
-    public LocalDateTime getStartDateTime() {
-        return startDateTime;
+    public LocalTime getStartTime() {
+        return startTime;
     }
 
-    public void setStartDateTime(LocalDateTime startDate) {
-        this.startDateTime = startDate;
+    public void setStartTime(LocalTime startDate) {
+        this.startTime = startDate;
     }
 
-    public LocalDateTime getEndDateTime() {
-        return endDateTime;
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
-    public void setEndDateTime(LocalDateTime endDate) {
-        this.endDateTime = endDate;
+    public void setEndTime(LocalTime endDate) {
+        this.endTime = endDate;
+    }
+
+    public LocalDateTime getFreezeDateTime() {
+        return freezeDateTime;
+    }
+
+    public void setFreezeDateTime(LocalDateTime freezeDateTime) {
+        this.freezeDateTime = freezeDateTime;
     }
 }
