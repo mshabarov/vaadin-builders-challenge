@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.teamhq.data.entity.User;
-import org.teamhq.data.service.UserRepository;
+import org.teamhq.data.repository.UserRepository;
 
 @Component
 public class AuthenticatedUser {
