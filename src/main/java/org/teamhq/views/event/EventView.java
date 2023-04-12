@@ -11,6 +11,8 @@ import org.teamhq.data.entity.Meal;
 import org.teamhq.views.MainLayout;
 
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
@@ -19,7 +21,9 @@ import com.vaadin.flow.router.RouteAlias;
 @Route(value = "event", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
 @PermitAll
-public class EventView extends HorizontalLayout {
+public class EventView extends HorizontalLayout implements HasUrlParameter<String> {
+
+    private String eventId;
 
     public EventView() {
         LocalDate now = LocalDate.now();
@@ -39,4 +43,8 @@ public class EventView extends HorizontalLayout {
         addClassName("board");
     }
 
+    @Override
+    public void setParameter(BeforeEvent event, String parameter) {
+        this.eventId = parameter;
+    }
 }
