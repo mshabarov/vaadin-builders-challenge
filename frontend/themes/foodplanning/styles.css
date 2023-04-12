@@ -1,15 +1,14 @@
 @import url('./main-layout.css');
 @import url('./meal-card.css');
+@import url('./day-component.css');
 
-
-.day-component {
-    border: dashed 2px green;
-    border-radius: 5px;
-    height: 400px;
+.board {
+    display: flex;
+    gap: 2rem;
 }
 
-.meal-component {
-    width: 150px;
-    height: 50px;
-    background: #00FF00;
+@media screen and (max-width: 800px) {
+    .board {
+        flex-direction: column;
+    }
 }

@@ -2,12 +2,15 @@ package org.teamhq.components;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.teamhq.stubs.MealStub;
+import org.teamhq.components.event.MealItem;
+import org.teamhq.data.entity.Meal;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -25,18 +28,21 @@ public class DayComponent extends VerticalLayout {
 
     private final int MAX_MEALS = 5;
 
-    private static final int MEALS_HEIGHT = 200;
+    private static final int MEALS_HEIGHT = 600;
 
     private VerticalLayout mealsContainer;
 
-    public DayComponent(LocalDate date, Collection<MealStub> meals) {
+    public DayComponent(LocalDate date, Collection<MealItem> meals) {
         this.date = date;
         Icon addIcon = new Icon(VaadinIcon.PLUS);
         addButton = new Button(addIcon);
         addButton.addClickListener(click -> {
-            LocalDateTime from = LocalDateTime.now().plusHours(counter++);
-            LocalDateTime to = from.plusMinutes(30);
-            MealStub meal = new MealStub(from, to);
+            LocalTime from = LocalTime.now().plusHours(counter++);
+            LocalTime to = from.plusMinutes(30);
+            Meal newMeal = new Meal();
+            newMeal.setStartTime(from);
+            newMeal.setEndTime(to);
+            MealItem meal = new MealItem(newMeal, false);
 
             addMeal(meal);
         });
@@ -44,28 +50,30 @@ public class DayComponent extends VerticalLayout {
         addButton.setWidthFull();
 
         Div titleComponent = new Div();
-        titleComponent.setText(date.toString());
+        titleComponent.getStyle().set("font-weight", "bold");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+                "dd MMMM yyyy");
+        titleComponent.setText(date.format(formatter));
 
         mealsContainer = new VerticalLayout();
         mealsContainer.setAlignItems(Alignment.CENTER);
         mealsContainer.setHeight(MEALS_HEIGHT + "px");
         meals.forEach(this::addMeal);
 
-        setWidth("200px");
         setClassName("day-component");
         add(titleComponent, addButton, mealsContainer);
     }
 
-    public void addMeal(MealStub meal) {
+    public void addMeal(MealItem meal) {
         if (mealsContainer.getComponentCount() > 0) {
             List<Component> meals = mealsContainer.getChildren().collect(Collectors.toList());
             meals.add(meal);
 
-            meals.sort(Comparator.comparing(one -> ((MealStub) one).getFrom()));
+            meals.sort(Comparator.comparing(one -> ((MealItem) one).getFrom()));
 
-            if (meals.size() * MealStub.HEIGHT > MEALS_HEIGHT) {
+            if (meals.size() * MealItem.HEIGHT > MEALS_HEIGHT) {
                 int newSize = MEALS_HEIGHT / meals.size();
-                meals.forEach(m -> ((MealStub) m).setHeight(newSize + "px") );
+                meals.forEach(m -> ((MealItem) m).setHeight(newSize + "px") );
             }
 
             mealsContainer.removeAll();
@@ -79,7 +87,7 @@ public class DayComponent extends VerticalLayout {
         }
     }
 
-    public void removeMeal(MealStub meal) {
+    public void removeMeal(MealItem meal) {
         mealsContainer.remove(meal);
     }
 }

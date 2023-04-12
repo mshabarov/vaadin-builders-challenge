@@ -1,0 +1,22 @@
+.day-component {
+    min-height: 600px;
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 200px;
+    max-width: 300px;
+
+    border: 1px dashed var(--lumo-primary-color);
+    border-radius: var(--lumo-border-radius-l);
+    padding: 1rem;
+    margin: 1rem;
+}
+
+.day-component.past {
+    opacity: .6;
+}
+
+.day-component.past .card {
+    background-color: transparent;
+}

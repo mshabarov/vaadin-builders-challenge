@@ -1,12 +1,13 @@
 package org.teamhq.views.event;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import jakarta.annotation.security.PermitAll;
 import org.teamhq.components.DayComponent;
-import org.teamhq.stubs.MealStub;
+import org.teamhq.components.event.MealItem;
+import org.teamhq.data.entity.Meal;
 import org.teamhq.views.MainLayout;
 
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -23,12 +24,19 @@ public class EventView extends HorizontalLayout {
     public EventView() {
         LocalDate now = LocalDate.now();
 
-        ArrayList<MealStub> meals = new ArrayList<>();
-        MealStub mealStub = new MealStub(LocalDateTime.now(), LocalDateTime.now().plusHours(1));
+        ArrayList<MealItem> meals = new ArrayList<>();
+        Meal meal = new Meal();
+        meal.setStartTime(LocalTime.now());
+        meal.setEndTime(LocalTime.now().plusHours(1));
+        MealItem mealStub = new MealItem(meal, false);
         meals.add(mealStub);
 
         DayComponent dayComponent = new DayComponent(now, meals);
-        add(dayComponent);
+        DayComponent dayComponent2 = new DayComponent(now, meals);
+        DayComponent dayComponent3 = new DayComponent(now, meals);
+        add(dayComponent, dayComponent2, dayComponent3);
+
+        addClassName("board");
     }
 
 }
