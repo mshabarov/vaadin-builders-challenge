@@ -1,7 +1,6 @@
 package org.teamhq.model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
