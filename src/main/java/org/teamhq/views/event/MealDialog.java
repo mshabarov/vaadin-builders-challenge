@@ -12,16 +12,15 @@ import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.Binder;
 import org.teamhq.data.entity.Event;
 import org.teamhq.data.entity.Meal;
-import org.teamhq.data.entity.MealVendor;
 import org.teamhq.data.entity.Vendor;
 import org.teamhq.data.repository.MealRepository;
-import org.teamhq.data.repository.MealVendorRepository;
 import org.teamhq.data.repository.VendorRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,8 +29,6 @@ public class MealDialog extends Dialog {
     private VendorRepository vendorRepository;
 
     private MealRepository mealRepository;
-
-    private MealVendorRepository mealVendorRepository;
 
     private MealUpdateMode mealUpdateMode;
 
@@ -54,19 +51,17 @@ public class MealDialog extends Dialog {
     private Button saveMealButton;
 
 
-    public MealDialog(VendorRepository vendorRepository, MealRepository mealRepository, MealVendorRepository mealVendorRepository, LocalDate mealDate, Meal meal) {
+    public MealDialog(VendorRepository vendorRepository, MealRepository mealRepository, LocalDate mealDate, Meal meal) {
         this.vendorRepository = vendorRepository;
         this.mealRepository = mealRepository;
-        this.mealVendorRepository = mealVendorRepository;
         this.mealDate = mealDate;
         mealUpdateMode = MealUpdateMode.EDIT;
         initMealDialog(meal);
     }
 
-    public MealDialog(VendorRepository vendorRepository, MealRepository mealRepository, MealVendorRepository mealVendorRepository, Event event, LocalDate mealDate) {
+    public MealDialog(VendorRepository vendorRepository, MealRepository mealRepository, Event event, LocalDate mealDate) {
         this.vendorRepository = vendorRepository;
         this.mealRepository = mealRepository;
-        this.mealVendorRepository = mealVendorRepository;
         this.mealDate = mealDate;
         mealUpdateMode = MealUpdateMode.CREATE;
         Meal meal = createDefaultMeal(event, mealDate);
@@ -113,7 +108,6 @@ public class MealDialog extends Dialog {
     private void initFields(Meal meal) {
         mealBinder = new Binder<>();
         mealBinder.setBean(meal);
-        System.out.println("1: "+meal.getEndTime());
 
         startField = new TimePicker("Start time");
         mealBinder.forField(startField).asRequired("Start time is mandatory").bind(Meal::getStartTime, Meal::setStartTime);
@@ -150,30 +144,17 @@ public class MealDialog extends Dialog {
         if (mealBinder.validate().hasErrors()) {
             return;
         }
-        saveNewVendors();
+        List<Vendor> vendors = saveNewVendors();
         Meal meal = mealBinder.getBean();
+        meal.setVendors(new HashSet<>(vendors));
         mealRepository.saveAndFlush(meal);
-        saveNewMealVendors(meal);
         close();
     }
 
-    private void saveNewVendors() {
+    private List<Vendor> saveNewVendors() {
         Set<Vendor> newVendors = new HashSet<>(vendorChoicesField.getValue());
         newVendors.removeAll(vendorRepository.findAll());
-        vendorRepository.saveAllAndFlush(newVendors);
-    }
-
-    private void saveNewMealVendors(Meal meal) {
-        Set<MealVendor> mealVendors = vendorChoicesField.getValue().stream().map(vendor -> createMealVendor(vendor, meal)).collect(Collectors.toSet());
-        mealVendorRepository.saveAll(mealVendors);
-
-    }
-
-    private MealVendor createMealVendor(Vendor vendor, Meal meal) {
-        MealVendor mealVendor = new MealVendor();
-        mealVendor.setVendor(vendor);
-        mealVendor.setMeal(meal);
-        return mealVendor;
+        return vendorRepository.saveAllAndFlush(newVendors);
     }
 
     private enum MealUpdateMode {
