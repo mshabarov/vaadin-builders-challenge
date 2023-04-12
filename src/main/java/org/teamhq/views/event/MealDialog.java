@@ -37,9 +37,9 @@ public class MealDialog extends Dialog {
 
     private LocalDate mealDate;
 
-    private DateTimePicker startField;
+    private TimePicker startField;
 
-    private DateTimePicker endField;
+    private TimePicker endField;
 
     private TextField nameField;
 
@@ -81,7 +81,7 @@ public class MealDialog extends Dialog {
 
     private Meal createDefaultMeal(Event event, LocalDate mealDate) {
         Meal meal = new Meal();
-        meal.setStartTime(LocalDateTime.now());
+        meal.setStartTime(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT));
         meal.setEndTime(LocalDateTime.now());
         meal.setFreezeDateTime(mealDate.minusDays(1).atTime(17, 0));
         meal.setEvent(event);
@@ -120,11 +120,11 @@ public class MealDialog extends Dialog {
         mealBinder = new Binder<>();
         mealBinder.setBean(meal);
 
-        startField = new DateTimePicker("Start time");
-        mealBinder.forField(startField).asRequired("Start time is mandatory").bind(Meal::getStartTime, Meal::setStartTime);
+        startField = new TimePicker("Start time");
+        mealBinder.forField(startField).asRequired("Start time is mandatory").bind(m -> m.getStartTime().toLocalTime(), (m, f) -> m.setStartTime(LocalDateTime.of(mealDate, f)));
 
-        endField = new DateTimePicker("End time");
-        mealBinder.forField(endField).asRequired("End time is mandatory").withValidator(startField.getValue()::isBefore, "End time should be after start time").bind(Meal::getEndTime, Meal::setEndTime);
+        endField = new TimePicker("End time");
+        mealBinder.forField(endField).asRequired("End time is mandatory").withValidator(startField.getValue()::isBefore, "End time should be after start time").bind(m -> m.getEndTime().toLocalTime(), (m, f) -> m.setEndTime(LocalDateTime.of(mealDate, f)));
 
         nameField = new TextField("Name");
         mealBinder.forField(nameField).asRequired("Name is mandatory").bind(Meal::getName, Meal::setName);
@@ -134,7 +134,7 @@ public class MealDialog extends Dialog {
 
         freezeDateTimeField = new DateTimePicker("Active until");
         mealBinder.forField(freezeDateTimeField).asRequired("Freeze date is " +
-                                                            "mandatory").withValidator(mealDate.atTime(startField.getValue().toLocalTime())::isAfter, "Freeze time should be before start time").bind(Meal::getFreezeDateTime, Meal::setFreezeDateTime);
+                                                            "mandatory").withValidator(mealDate.atTime(startField.getValue())::isAfter, "Freeze time should be before start time").bind(Meal::getFreezeDateTime, Meal::setFreezeDateTime);
 
         vendorChoicesField = new MultiSelectComboBox<>("Vendor options");
         vendorChoicesField.setSizeFull();

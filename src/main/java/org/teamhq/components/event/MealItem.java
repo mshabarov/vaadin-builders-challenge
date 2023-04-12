@@ -5,7 +5,9 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import org.teamhq.data.entity.Meal;
+import org.teamhq.views.event.MealDialog;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
@@ -14,6 +16,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.function.SerializableConsumer;
 
 public class MealItem extends Div {
 
@@ -67,6 +70,8 @@ public class MealItem extends Div {
             Button deleteButton = new Button(new Icon(VaadinIcon.CLOSE),
                     e -> {
                         // Show delete confirm dialog
+                        // TODO
+                        e.getSource().findAncestor(MealItem.class).removeFromParent();
                     });
             deleteButton.getElement().setAttribute("aria-label", "Delete meal");
             buttonLayout.add(deleteButton);
