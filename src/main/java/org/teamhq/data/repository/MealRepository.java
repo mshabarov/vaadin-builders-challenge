@@ -13,7 +13,6 @@ public interface MealRepository extends JpaRepository<Meal, Long>, JpaSpecificat
             SELECT m
               FROM Meal m
               JOIN FETCH Vendor v
-              LEFT JOIN FETCH MealChoice mc
              WHERE m.event.id = :eventId
             """)
     List<Meal> getAllMealsByEventId(Long eventId);

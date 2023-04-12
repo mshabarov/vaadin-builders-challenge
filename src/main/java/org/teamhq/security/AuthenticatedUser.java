@@ -23,6 +23,10 @@ public class AuthenticatedUser {
                 .map(userDetails -> userRepository.findByUsername(userDetails.getUsername()));
     }
 
+    public User require() {
+        return get().orElseThrow();
+    }
+
     public void logout() {
         authenticationContext.logout();
     }
