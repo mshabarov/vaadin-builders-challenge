@@ -132,7 +132,7 @@ public class MealDialog extends Dialog {
 
         vendorChoicesField = new MultiSelectComboBox<>("Vendor options");
         vendorChoicesField.setSizeFull();
-        vendorChoicesField.setItems(getAllVendors());
+        vendorChoicesField.setItems(vendorRepository.findAll());
         vendorChoicesField.setAllowCustomValue(true);
         vendorChoicesField.setItemLabelGenerator(Vendor::getName);
         vendorChoicesField.addCustomValueSetListener(event -> {
@@ -144,17 +144,6 @@ public class MealDialog extends Dialog {
         });
         
         saveMealButton = new Button("Save meal", click -> saveMeal());
-    }
-
-    private Set<Vendor> getAllVendors() {
-        // TODO implement
-        Vendor v1 = new Vendor();
-        v1.setName("Vendor 1");
-        Vendor v2 = new Vendor();
-        v2.setName("Vendor 2");
-        Vendor v3 = new Vendor();
-        v3.setName("Vendor 3");
-        return Set.of(v1, v2, v3);
     }
 
     public void saveMeal() {
@@ -170,7 +159,7 @@ public class MealDialog extends Dialog {
 
     private void saveNewVendors() {
         Set<Vendor> newVendors = new HashSet<>(vendorChoicesField.getValue());
-        newVendors.removeAll(getAllVendors());
+        newVendors.removeAll(vendorRepository.findAll());
         vendorRepository.saveAllAndFlush(newVendors);
     }
 
