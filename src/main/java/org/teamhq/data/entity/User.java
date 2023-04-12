@@ -10,12 +10,19 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import java.util.Set;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import org.teamhq.data.Role;
 
 @Entity
 @Table(name = "application_user")
 public class User extends AbstractEntity {
 
+    @Email
+    @NotEmpty
+    private String email;
+    private String comment;
     private String username;
     private String name;
     @JsonIgnore
@@ -26,6 +33,22 @@ public class User extends AbstractEntity {
     @Lob
     @Column(length = 1000000)
     private byte[] profilePicture;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
     public String getUsername() {
         return username;
