@@ -38,7 +38,7 @@ public class MealChoice {
         private User user;
 
         @ManyToOne
-        private EventMeal eventMeal;
+        private MealVendor mealVendor;
 
         public User getUser() {
             return user;
@@ -48,12 +48,12 @@ public class MealChoice {
             this.user = user;
         }
 
-        public EventMeal getEventMeal() {
-            return eventMeal;
+        public MealVendor getMealVendor() {
+            return mealVendor;
         }
 
-        public void setEventMeal(EventMeal eventMeal) {
-            this.eventMeal = eventMeal;
+        public void setMealVendor(MealVendor mealVendor) {
+            this.mealVendor = mealVendor;
         }
     }
 }

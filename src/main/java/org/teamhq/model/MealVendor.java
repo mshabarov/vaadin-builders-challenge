@@ -6,17 +6,17 @@ import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class EventMeal {
+public class MealVendor {
     @Id
     private Number id;
 
     @ManyToOne
     @NotNull
-    private Event event;
+    private Meal meal;
 
     @ManyToOne
     @NotNull
-    private Meal meal;
+    private Vendor vendor;
 
     public Number getId() {
         return id;
@@ -26,19 +26,19 @@ public class EventMeal {
         this.id = id;
     }
 
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
-
     public Meal getMeal() {
         return meal;
     }
 
     public void setMeal(Meal meal) {
         this.meal = meal;
+    }
+
+    public Vendor getVendor() {
+        return vendor;
+    }
+
+    public void setVendor(Vendor vendor) {
+        this.vendor = vendor;
     }
 }
