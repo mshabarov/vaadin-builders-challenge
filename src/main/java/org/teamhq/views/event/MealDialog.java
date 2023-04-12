@@ -10,6 +10,8 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.function.SerializableConsumer;
+
 import org.teamhq.data.entity.Event;
 import org.teamhq.data.entity.Meal;
 import org.teamhq.data.entity.Vendor;
@@ -17,6 +19,7 @@ import org.teamhq.data.repository.MealRepository;
 import org.teamhq.data.repository.VendorRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -34,9 +37,9 @@ public class MealDialog extends Dialog {
 
     private LocalDate mealDate;
 
-    private TimePicker startField;
+    private DateTimePicker startField;
 
-    private TimePicker endField;
+    private DateTimePicker endField;
 
     private TextField nameField;
 
@@ -50,28 +53,36 @@ public class MealDialog extends Dialog {
 
     private Button saveMealButton;
 
+    private SerializableConsumer<Meal> onSave;
 
-    public MealDialog(VendorRepository vendorRepository, MealRepository mealRepository, LocalDate mealDate, Meal meal) {
+
+    public MealDialog(VendorRepository vendorRepository,
+                      MealRepository mealRepository, LocalDate mealDate,
+                      Meal meal, SerializableConsumer<Meal> onSave) {
         this.vendorRepository = vendorRepository;
         this.mealRepository = mealRepository;
         this.mealDate = mealDate;
         mealUpdateMode = MealUpdateMode.EDIT;
+        this.onSave = onSave;
         initMealDialog(meal);
     }
 
-    public MealDialog(VendorRepository vendorRepository, MealRepository mealRepository, Event event, LocalDate mealDate) {
+    public MealDialog(VendorRepository vendorRepository,
+                      MealRepository mealRepository, Event event,
+                      LocalDate mealDate, SerializableConsumer<Meal> onSave) {
         this.vendorRepository = vendorRepository;
         this.mealRepository = mealRepository;
         this.mealDate = mealDate;
         mealUpdateMode = MealUpdateMode.CREATE;
+        this.onSave = onSave;
         Meal meal = createDefaultMeal(event, mealDate);
         initMealDialog(meal);
     }
 
     private Meal createDefaultMeal(Event event, LocalDate mealDate) {
         Meal meal = new Meal();
-        meal.setStartTime(LocalTime.of(10, 0));
-        meal.setEndTime(LocalTime.of(11, 0));
+        meal.setStartTime(LocalDateTime.now());
+        meal.setEndTime(LocalDateTime.now());
         meal.setFreezeDateTime(mealDate.minusDays(1).atTime(17, 0));
         meal.setEvent(event);
         return meal;
@@ -109,10 +120,10 @@ public class MealDialog extends Dialog {
         mealBinder = new Binder<>();
         mealBinder.setBean(meal);
 
-        startField = new TimePicker("Start time");
+        startField = new DateTimePicker("Start time");
         mealBinder.forField(startField).asRequired("Start time is mandatory").bind(Meal::getStartTime, Meal::setStartTime);
 
-        endField = new TimePicker("End time");
+        endField = new DateTimePicker("End time");
         mealBinder.forField(endField).asRequired("End time is mandatory").withValidator(startField.getValue()::isBefore, "End time should be after start time").bind(Meal::getEndTime, Meal::setEndTime);
 
         nameField = new TextField("Name");
@@ -122,7 +133,8 @@ public class MealDialog extends Dialog {
         mealBinder.forField(descriptionField).bind(Meal::getDescription, Meal::setDescription);
 
         freezeDateTimeField = new DateTimePicker("Active until");
-        mealBinder.forField(freezeDateTimeField).asRequired("Freeze date is mandatory").withValidator(mealDate.atTime(startField.getValue())::isAfter, "Freeze time should be before start time").bind(Meal::getFreezeDateTime, Meal::setFreezeDateTime);
+        mealBinder.forField(freezeDateTimeField).asRequired("Freeze date is " +
+                                                            "mandatory").withValidator(mealDate.atTime(startField.getValue().toLocalTime())::isAfter, "Freeze time should be before start time").bind(Meal::getFreezeDateTime, Meal::setFreezeDateTime);
 
         vendorChoicesField = new MultiSelectComboBox<>("Vendor options");
         vendorChoicesField.setSizeFull();
@@ -136,7 +148,7 @@ public class MealDialog extends Dialog {
             vendorChoices.add(customVendor);
             vendorChoicesField.setValue(vendorChoices);
         });
-        
+
         saveMealButton = new Button("Save meal", click -> saveMeal());
     }
 
@@ -147,7 +159,8 @@ public class MealDialog extends Dialog {
         List<Vendor> vendors = saveNewVendors();
         Meal meal = mealBinder.getBean();
         meal.setVendors(new HashSet<>(vendors));
-        mealRepository.saveAndFlush(meal);
+//        mealRepository.saveAndFlush(meal);
+        onSave.accept(meal);
         close();
     }
 

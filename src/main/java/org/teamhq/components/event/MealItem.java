@@ -1,5 +1,6 @@
 package org.teamhq.components.event;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -78,11 +79,11 @@ public class MealItem extends Div {
         setWidthFull();
     }
 
-    public LocalTime getFrom() {
+    public LocalDateTime getFrom() {
         return meal.getStartTime();
     }
 
-    public LocalTime getTo() {
+    public LocalDateTime getTo() {
         return meal.getEndTime();
     }
 }
