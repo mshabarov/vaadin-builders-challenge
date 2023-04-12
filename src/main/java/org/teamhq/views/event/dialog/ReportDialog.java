@@ -2,13 +2,14 @@ package org.teamhq.views.event.dialog;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Component;
 import org.teamhq.data.entity.Meal;
 import org.teamhq.data.entity.MealChoice;
+import org.teamhq.data.entity.User;
 import org.teamhq.data.entity.Vendor;
 import org.teamhq.data.repository.MealChoiceRepository;
 
@@ -33,7 +34,33 @@ public class ReportDialog extends Dialog {
 
     private void initUI(Meal meal) {
         initHeader(meal);
-        List<MealChoice> mealChoicesByMeal = mealChoiceRepository.getMealChoicesByMeal(meal);
+//        List<MealChoice> mealChoicesByMeal = mealChoiceRepository.getMealChoicesByMeal(meal);
+        MealChoice mealChoice = new MealChoice();
+        mealChoice.setMeal(meal);
+        mealChoice.setComment("Lactose free");
+        Vendor pizza = new Vendor();
+        pizza.setName("Koti Pizza");
+        mealChoice.setVendor(pizza);
+
+        MealChoice mealChoice2 = new MealChoice();
+        mealChoice2.setMeal(meal);
+        Vendor taco = new Vendor();
+        taco.setName("Taco Bell");
+        mealChoice2.setVendor(taco);
+
+        User user = new User();
+        user.setEmail("user@vaadin.com");
+        user.setName("John Doe");
+        mealChoice.setUser(user);
+
+        User user2 = new User();
+        user2.setEmail("elon@tesla.com");
+        user2.setName("Elon Musk");
+        mealChoice2.setUser(user2);
+
+        List<MealChoice> mealChoicesByMeal = Arrays.asList(mealChoice,
+                mealChoice2);
+
         if (mealChoicesByMeal == null || mealChoicesByMeal.isEmpty()) {
             addNoAttendeesLayout();
         } else {
@@ -89,6 +116,8 @@ public class ReportDialog extends Dialog {
             layout.add(new Icon(VaadinIcon.WARNING));
             exceptions.stream().map(this::createExceptionSpan).forEach(layout::add);
         }
+
+        add(layout);
     }
 
     private void addChoicesLayout(List<MealChoice> choices) {

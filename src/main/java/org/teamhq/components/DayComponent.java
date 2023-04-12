@@ -52,8 +52,12 @@ public class DayComponent extends VerticalLayout {
         addButton = new Button(addIcon);
         addButton.addClickListener(click -> {
             MealDialog mealDialog = new MealDialog(vendorRepository,
+                    // TODO: remove callback
                     mealRepository, event, date, m -> {
-                MealItem mealItem = new MealItem(mealChoiceRepository, m, false);
+                MealItem mealItem = new MealItem(vendorRepository,
+                        mealRepository,
+                        mealChoiceRepository, m,
+                        false);
                 addMeal(mealItem);
             });
             mealDialog.open();

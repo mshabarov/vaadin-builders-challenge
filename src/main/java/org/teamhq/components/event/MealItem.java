@@ -1,16 +1,18 @@
 package org.teamhq.components.event;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.teamhq.data.entity.Meal;
-import org.teamhq.views.event.MealDialog;
+import org.teamhq.data.repository.MealChoiceRepository;
+import org.teamhq.data.repository.MealRepository;
+import org.teamhq.data.repository.VendorRepository;
+import org.teamhq.views.event.dialog.MealDialog;
+import org.teamhq.views.event.dialog.ReportDialog;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
@@ -19,8 +21,6 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import org.teamhq.data.repository.MealChoiceRepository;
-import org.teamhq.views.event.dialog.ReportDialog;
 
 public class MealItem extends Div {
 
@@ -28,7 +28,10 @@ public class MealItem extends Div {
 
     private final Meal meal;
 
-    public MealItem(MealChoiceRepository mealChoiceRepository, Meal meal, boolean confirmed) {
+    public MealItem(VendorRepository vendorRepository,
+                    MealRepository mealRepository,
+                    MealChoiceRepository mealChoiceRepository, Meal meal,
+                    boolean confirmed) {
         this.meal = meal;
         this.addClickListener(e -> {
             // Show attendance dialog
@@ -62,6 +65,10 @@ public class MealItem extends Div {
             Button editButton = new Button(new Icon(VaadinIcon.PENCIL),
                     e -> {
                         // Show edit dialog
+                        MealDialog mealDialog = new MealDialog(vendorRepository, mealRepository,
+                                meal.getStartTime().toLocalDate(), meal, m -> {
+                        });
+                        mealDialog.open();
                     });
             editButton.getElement().setAttribute("aria-label", "Edit meal");
             buttonLayout.add(editButton);
