@@ -1,15 +1,19 @@
 package org.teamhq.views.event;
 
-import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.notification.Notification;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+
+import jakarta.annotation.security.PermitAll;
+import org.teamhq.components.DayComponent;
+import org.teamhq.components.event.MealItem;
+import org.teamhq.data.entity.Meal;
+import org.teamhq.views.MainLayout;
+
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
-import jakarta.annotation.security.PermitAll;
-import org.teamhq.views.MainLayout;
 
 @PageTitle("Event")
 @Route(value = "event", layout = MainLayout.class)
@@ -17,21 +21,22 @@ import org.teamhq.views.MainLayout;
 @PermitAll
 public class EventView extends HorizontalLayout {
 
-    private TextField name;
-    private Button sayHello;
-
     public EventView() {
-        name = new TextField("Your name");
-        sayHello = new Button("Say hello");
-        sayHello.addClickListener(e -> {
-            Notification.show("Hello " + name.getValue());
-        });
-        sayHello.addClickShortcut(Key.ENTER);
+        LocalDate now = LocalDate.now();
 
-        setMargin(true);
-        setVerticalComponentAlignment(Alignment.END, name, sayHello);
+        ArrayList<MealItem> meals = new ArrayList<>();
+        Meal meal = new Meal();
+        meal.setStartTime(LocalTime.now());
+        meal.setEndTime(LocalTime.now().plusHours(1));
+        MealItem mealStub = new MealItem(meal, false);
+        meals.add(mealStub);
 
-        add(name, sayHello);
+        DayComponent dayComponent = new DayComponent(now, meals);
+        DayComponent dayComponent2 = new DayComponent(now, meals);
+        DayComponent dayComponent3 = new DayComponent(now, meals);
+        add(dayComponent, dayComponent2, dayComponent3);
+
+        addClassName("board");
     }
 
 }

@@ -1,5 +1,6 @@
 package org.teamhq.components.event;
 
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import org.teamhq.data.entity.Meal;
@@ -14,7 +15,13 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class MealItem extends Div {
+
+    public static final int HEIGHT = 50;
+
+    private final Meal meal;
+
     public MealItem(Meal meal, boolean confirmed) {
+        this.meal = meal;
         this.addClickListener(e -> {
             // Show attendance dialog
         });
@@ -67,5 +74,15 @@ public class MealItem extends Div {
         }
 
         add(layout);
+
+        setWidthFull();
+    }
+
+    public LocalTime getFrom() {
+        return meal.getStartTime();
+    }
+
+    public LocalTime getTo() {
+        return meal.getEndTime();
     }
 }
