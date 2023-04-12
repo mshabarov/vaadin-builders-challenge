@@ -18,6 +18,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import org.teamhq.data.repository.MealChoiceRepository;
 
 public class DayComponent extends VerticalLayout {
 
@@ -32,7 +33,7 @@ public class DayComponent extends VerticalLayout {
 
     private VerticalLayout mealsContainer;
 
-    public DayComponent(LocalDate date, Collection<MealItem> meals) {
+    public DayComponent(MealChoiceRepository mealChoiceRepository, LocalDate date, Collection<MealItem> meals) {
         this.date = date;
         Icon addIcon = new Icon(VaadinIcon.PLUS);
         addButton = new Button(addIcon);
@@ -42,7 +43,7 @@ public class DayComponent extends VerticalLayout {
             Meal newMeal = new Meal();
             newMeal.setStartTime(from);
             newMeal.setEndTime(to);
-            MealItem meal = new MealItem(newMeal, false);
+            MealItem meal = new MealItem(mealChoiceRepository, newMeal, false);
 
             addMeal(meal);
         });

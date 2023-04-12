@@ -16,6 +16,8 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import org.teamhq.data.repository.MealChoiceRepository;
+import org.teamhq.views.event.dialog.ReportDialog;
 
 public class MealItem extends Div {
 
@@ -23,7 +25,7 @@ public class MealItem extends Div {
 
     private final Meal meal;
 
-    public MealItem(Meal meal, boolean confirmed) {
+    public MealItem(MealChoiceRepository mealChoiceRepository, Meal meal, boolean confirmed) {
         this.meal = meal;
         this.addClickListener(e -> {
             // Show attendance dialog
@@ -63,7 +65,8 @@ public class MealItem extends Div {
 
             Button reportButton = new Button(new Icon(VaadinIcon.LIST_OL),
                     e -> {
-                        reportDialog.open();
+                        ReportDialog reportDialog = new ReportDialog(mealChoiceRepository);
+                        reportDialog.open(meal);
                     });
             reportButton.getElement().setAttribute("aria-label", "Show report");
             buttonLayout.add(reportButton);

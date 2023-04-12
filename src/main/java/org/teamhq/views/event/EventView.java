@@ -8,6 +8,7 @@ import jakarta.annotation.security.PermitAll;
 import org.teamhq.components.DayComponent;
 import org.teamhq.components.event.MealItem;
 import org.teamhq.data.entity.Meal;
+import org.teamhq.data.repository.MealChoiceRepository;
 import org.teamhq.views.MainLayout;
 
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -21,19 +22,19 @@ import com.vaadin.flow.router.RouteAlias;
 @PermitAll
 public class EventView extends HorizontalLayout {
 
-    public EventView() {
+    public EventView(MealChoiceRepository mealChoiceRepository) {
         LocalDate now = LocalDate.now();
 
         ArrayList<MealItem> meals = new ArrayList<>();
         Meal meal = new Meal();
         meal.setStartTime(LocalTime.now());
         meal.setEndTime(LocalTime.now().plusHours(1));
-        MealItem mealStub = new MealItem(meal, false);
+        MealItem mealStub = new MealItem(mealChoiceRepository, meal, false);
         meals.add(mealStub);
 
-        DayComponent dayComponent = new DayComponent(now, meals);
-        DayComponent dayComponent2 = new DayComponent(now, meals);
-        DayComponent dayComponent3 = new DayComponent(now, meals);
+        DayComponent dayComponent = new DayComponent(mealChoiceRepository, now, meals);
+        DayComponent dayComponent2 = new DayComponent(mealChoiceRepository, now, meals);
+        DayComponent dayComponent3 = new DayComponent(mealChoiceRepository, now, meals);
         add(dayComponent, dayComponent2, dayComponent3);
 
         addClassName("board");
