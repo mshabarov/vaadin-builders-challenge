@@ -9,8 +9,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.teamhq.components.event.MealItem;
+import org.teamhq.data.entity.Event;
 import org.teamhq.data.entity.Meal;
+import org.teamhq.data.repository.MealRepository;
+import org.teamhq.data.repository.VendorRepository;
+import org.teamhq.views.event.MealDialog;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -32,19 +37,27 @@ public class DayComponent extends VerticalLayout {
 
     private VerticalLayout mealsContainer;
 
-    public DayComponent(LocalDate date, Collection<MealItem> meals) {
+    private VendorRepository vendorRepository;
+
+    private MealRepository mealRepository;
+
+    public DayComponent(VendorRepository vendorRepository,
+                        MealRepository mealRepository, LocalDate date,
+                        Event event,
+                        Collection<MealItem> meals) {
+        this.vendorRepository = vendorRepository;
+        this.mealRepository = mealRepository;
         this.date = date;
         Icon addIcon = new Icon(VaadinIcon.PLUS);
         addButton = new Button(addIcon);
         addButton.addClickListener(click -> {
-            LocalTime from = LocalTime.now().plusHours(counter++);
-            LocalTime to = from.plusMinutes(30);
-            Meal newMeal = new Meal();
-            newMeal.setStartTime(from);
-            newMeal.setEndTime(to);
-            MealItem meal = new MealItem(newMeal, false);
+            MealDialog mealDialog = new MealDialog(vendorRepository,
+                    mealRepository, event, date, m -> {
+                MealItem mealItem = new MealItem(m, false);
+                addMeal(mealItem);
+            });
+            mealDialog.open();
 
-            addMeal(meal);
         });
 
         addButton.setWidthFull();

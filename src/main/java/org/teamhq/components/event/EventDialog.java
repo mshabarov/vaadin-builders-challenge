@@ -1,12 +1,6 @@
 package org.teamhq.components.event;
 
-import java.util.HashSet;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.teamhq.data.entity.Event;
-import org.teamhq.data.entity.Meal;
-import org.teamhq.data.entity.Vendor;
 import org.teamhq.data.repository.EventRepository;
 
 import com.vaadin.flow.component.button.Button;
@@ -23,9 +17,6 @@ import com.vaadin.flow.function.SerializableConsumer;
 
 public class EventDialog extends Dialog {
 
-    @Autowired
-    private EventRepository eventRepository;
-
     private TextField eventName;
 
     private TextArea description;
@@ -40,7 +31,11 @@ public class EventDialog extends Dialog {
 
     private SerializableConsumer<Event> onSave;
 
-    public EventDialog(SerializableConsumer<Event> onSave) {
+    private EventRepository eventRepository;
+
+    public EventDialog(EventRepository eventRepository,
+                       SerializableConsumer<Event> onSave) {
+        this.eventRepository = eventRepository;
         this.onSave = onSave;
         eventName = new TextField("Event name");
         description = new TextArea("Event Description");

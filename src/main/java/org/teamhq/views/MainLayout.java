@@ -23,10 +23,13 @@ import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import java.io.ByteArrayInputStream;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.teamhq.components.appnav.AppNav;
 import org.teamhq.components.appnav.AppNavItem;
 import org.teamhq.components.event.EventDialog;
 import org.teamhq.data.entity.User;
+import org.teamhq.data.repository.EventRepository;
 import org.teamhq.security.AuthenticatedUser;
 import org.teamhq.views.event.EventView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
@@ -40,6 +43,9 @@ public class MainLayout extends AppLayout {
 
     private AuthenticatedUser authenticatedUser;
     private AccessAnnotationChecker accessChecker;
+
+    @Autowired
+    private EventRepository eventRepository;
 
     public MainLayout(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker) {
         this.authenticatedUser = authenticatedUser;
@@ -71,8 +77,10 @@ public class MainLayout extends AppLayout {
         Button addNewEvent = new Button("Add new event", new Icon(VaadinIcon.PLUS));
         addNewEvent.setWidthFull();
         addNewEvent.addClickListener(click -> {
-            EventDialog dialog = new EventDialog(event -> {
-                new RouterLink(event.getName(), EventView.class, event.getId())
+            EventDialog dialog = new EventDialog(eventRepository, event -> {
+                RouterLink eventLink = new RouterLink(event.getName(), EventView.class,
+                        event.getId());
+                eventList.add(eventLink);
             });
             dialog.open();
         });

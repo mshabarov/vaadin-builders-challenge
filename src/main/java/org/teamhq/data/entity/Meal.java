@@ -16,11 +16,11 @@ public class Meal extends AbstractEntity {
 
     private String description;
 
-    @Temporal(TemporalType.TIME)
-    private LocalTime startTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime startTime;
 
-    @Temporal(TemporalType.TIME)
-    private LocalTime endTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime endTime;
 
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime freezeDateTime;
@@ -58,19 +58,19 @@ public class Meal extends AbstractEntity {
         this.description = description;
     }
 
-    public LocalTime getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalTime startDate) {
+    public void setStartTime(LocalDateTime startDate) {
         this.startTime = startDate;
     }
 
-    public LocalTime getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalTime endDate) {
+    public void setEndTime(LocalDateTime endDate) {
         this.endTime = endDate;
     }
 
