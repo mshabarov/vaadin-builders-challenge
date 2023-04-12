@@ -1,4 +1,4 @@
-package org.teamhq.data.service;
+package org.teamhq.data.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
