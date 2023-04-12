@@ -1,5 +1,6 @@
 package org.teamhq.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
@@ -18,11 +19,11 @@ public class Event {
 
     private String description;
 
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime startDateTime;
 
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime endDateTime;
 
     public Number getId() {
         return id;
@@ -48,19 +49,19 @@ public class Event {
         this.description = description;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public LocalDateTime getStartDateTime() {
+        return startDateTime;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setStartDateTime(LocalDateTime startDate) {
+        this.startDateTime = startDate;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public LocalDateTime getEndDateTime() {
+        return endDateTime;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setEndDateTime(LocalDateTime endDate) {
+        this.endDateTime = endDate;
     }
 }
