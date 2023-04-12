@@ -1,0 +1,46 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--lumo-border-radius-l);
+    padding: 1rem;
+    box-sizing: border-box;
+}
+.card h3 {
+    font-size: 0.75rem;
+}
+.card h1 {
+    font-size: 20pt;
+}
+.card .actions {
+    display: none;
+}
+.card:hover .actions {
+    display: flex;
+    column-gap: 4px;
+}
+
+.unconfirmed {
+    border: 2px solid var(--lumo-primary-color);
+    background-color: var(--lumo-primary-contrast-color);
+}
+.unconfirmed h3 {
+    color: var(--lumo-contrast-60pct);
+}
+.confirmed h1 {
+
+}
+
+.confirmed {
+    border: 2px solid var(--lumo-primary-color);
+    background-color: var(--lumo-primary-color);
+}
+.confirmed h3 {
+    color: var(--lumo-primary-contrast-color);
+}
+.confirmed h1 {
+    color: var(--lumo-primary-contrast-color);
+}
+.confirmed vaadin-button {
+    background-color: var(--lumo-primary-contrast-color);
+    color: var(--lumo-primary-color);
+}
