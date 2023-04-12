@@ -93,7 +93,10 @@ public class EventView extends HorizontalLayout implements HasUrlParameter<Long>
 
                 Collection<MealItem> mealItems = new ArrayList<>();
                 filteredMeals.forEach(m -> {
-                    MealItem mealItem = new MealItem(mealChoiceRepository, m, false);
+                    MealItem mealItem = new MealItem(vendorRepository,
+                            mealRepository,
+                            mealChoiceRepository, m
+                            , false);
                     mealItems.add(mealItem);
                 });
 

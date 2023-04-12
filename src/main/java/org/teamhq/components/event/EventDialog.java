@@ -1,10 +1,14 @@
 package org.teamhq.components.event;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import org.teamhq.data.entity.Event;
 import org.teamhq.data.repository.EventRepository;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -21,9 +25,9 @@ public class EventDialog extends Dialog {
 
     private TextArea description;
 
-    private DateTimePicker start;
+    private DatePicker start;
 
-    private DateTimePicker end;
+    private DatePicker end;
 
     private Button save;
 
@@ -39,12 +43,14 @@ public class EventDialog extends Dialog {
         this.onSave = onSave;
         eventName = new TextField("Event name");
         description = new TextArea("Event Description");
-        start = new DateTimePicker("Event Start time");
-        end = new DateTimePicker("Event End time");
+        start = new DatePicker("Event Start time");
+        end = new DatePicker("Event End time");
         save = new Button("Save", click -> saveEvent());
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Event event = new Event();
+        event.setStartDateTime(LocalDateTime.now());
+        event.setEndDateTime(LocalDateTime.now().plusDays(1));
 
         binder = new Binder<>();
         binder.setBean(event);
@@ -56,10 +62,14 @@ public class EventDialog extends Dialog {
                 .bind(Event::getDescription, Event::setDescription);
 
         binder.forField(start).asRequired("Start time is mandatory")
-                .bind(Event::getStartDateTime, Event::setStartDateTime);
+                .bind(d -> d.getStartDateTime().toLocalDate(),
+                        (d, f) -> d.setStartDateTime(LocalDateTime.of(f,
+                                LocalTime.MIDNIGHT)));
 
         binder.forField(end).asRequired("End time is mandatory")
-                .bind(Event::getEndDateTime, Event::setEndDateTime);
+                .bind(d -> d.getEndDateTime().toLocalDate(),
+                        (d, f) -> d.setEndDateTime(LocalDateTime.of(f,
+                                LocalTime.MIDNIGHT)));
 
         FormLayout formLayout = new FormLayout();
 
