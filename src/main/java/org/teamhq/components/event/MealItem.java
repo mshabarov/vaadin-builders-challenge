@@ -3,7 +3,10 @@ package org.teamhq.components.event;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.teamhq.data.entity.Meal;
 import org.teamhq.views.event.MealDialog;
 
@@ -16,7 +19,8 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.function.SerializableConsumer;
+import org.teamhq.data.repository.MealChoiceRepository;
+import org.teamhq.views.event.dialog.ReportDialog;
 
 public class MealItem extends Div {
 
@@ -24,7 +28,7 @@ public class MealItem extends Div {
 
     private final Meal meal;
 
-    public MealItem(Meal meal, boolean confirmed) {
+    public MealItem(MealChoiceRepository mealChoiceRepository, Meal meal, boolean confirmed) {
         this.meal = meal;
         this.addClickListener(e -> {
             // Show attendance dialog
@@ -49,7 +53,9 @@ public class MealItem extends Div {
         layout.add(titleHeading);
 
         // If the current user has the Admin role
-        if (true) {
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        if (authorities.stream().anyMatch(auth -> auth.getAuthority().contains(
+                "ADMIN"))) {
             HorizontalLayout buttonLayout = new HorizontalLayout();
             buttonLayout.addClassName("actions");
 
@@ -62,7 +68,8 @@ public class MealItem extends Div {
 
             Button reportButton = new Button(new Icon(VaadinIcon.LIST_OL),
                     e -> {
-                        // Show report dialog
+                        ReportDialog reportDialog = new ReportDialog(mealChoiceRepository);
+                        reportDialog.open(meal);
                     });
             reportButton.getElement().setAttribute("aria-label", "Show report");
             buttonLayout.add(reportButton);
