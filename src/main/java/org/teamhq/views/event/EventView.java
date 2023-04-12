@@ -17,6 +17,7 @@ import org.teamhq.components.event.MealItem;
 import org.teamhq.data.entity.Event;
 import org.teamhq.data.entity.Meal;
 import org.teamhq.data.repository.EventRepository;
+import org.teamhq.data.repository.MealChoiceRepository;
 import org.teamhq.data.repository.MealRepository;
 import org.teamhq.data.repository.VendorRepository;
 import org.teamhq.views.MainLayout;
@@ -43,6 +44,9 @@ public class EventView extends HorizontalLayout implements HasUrlParameter<Long>
 
     @Autowired
     private MealRepository mealRepository;
+
+        @Autowired
+        private MealChoiceRepository mealChoiceRepository;
 
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter Long parameter) {
@@ -89,19 +93,18 @@ public class EventView extends HorizontalLayout implements HasUrlParameter<Long>
 
                 Collection<MealItem> mealItems = new ArrayList<>();
                 filteredMeals.forEach(m -> {
-                    MealItem mealItem = new MealItem(m, false);
+                    MealItem mealItem = new MealItem(mealChoiceRepository, m, false);
                     mealItems.add(mealItem);
                 });
 
                 DayComponent dayComponent =
-                        new DayComponent(vendorRepository, mealRepository,
+                        new DayComponent(vendorRepository, mealRepository, mealChoiceRepository,
                                 startDateTime.plusDays(finalI).toLocalDate(),
                                 eventEntity.get(), mealItems);
                 add(dayComponent);
             }
 
         }
-
 
         addClassName("board");
     }

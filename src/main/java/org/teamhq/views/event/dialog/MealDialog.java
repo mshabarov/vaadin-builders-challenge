@@ -1,4 +1,4 @@
-package org.teamhq.views.event;
+package org.teamhq.views.event.dialog;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class MealDialog extends Dialog {
 
