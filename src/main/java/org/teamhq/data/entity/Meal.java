@@ -2,18 +2,14 @@ package org.teamhq.data.entity;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.Set;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 public class Meal extends AbstractEntity {
-
-    @ManyToOne
-    private Event event;
 
     @NotEmpty
     private String name;
@@ -28,6 +24,15 @@ public class Meal extends AbstractEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime freezeDateTime;
+
+    @ManyToOne
+    private Event event;
+
+    @ManyToMany
+    private Set<Vendor> vendors;
+
+    @OneToMany
+    private List<MealChoice> mealChoices;
 
     public Event getEvent() {
         return event;
@@ -75,5 +80,21 @@ public class Meal extends AbstractEntity {
 
     public void setFreezeDateTime(LocalDateTime freezeDateTime) {
         this.freezeDateTime = freezeDateTime;
+    }
+
+    public Set<Vendor> getVendors() {
+        return vendors;
+    }
+
+    public void setVendors(Set<Vendor> vendors) {
+        this.vendors = vendors;
+    }
+
+    public List<MealChoice> getMealChoices() {
+        return mealChoices;
+    }
+
+    public void setMealChoices(List<MealChoice> mealChoices) {
+        this.mealChoices = mealChoices;
     }
 }
