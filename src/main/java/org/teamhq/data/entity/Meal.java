@@ -31,9 +31,6 @@ public class Meal extends AbstractEntity {
     @ManyToMany
     private Set<Vendor> vendors;
 
-    @OneToMany
-    private List<MealChoice> mealChoices;
-
     public Event getEvent() {
         return event;
     }
@@ -88,13 +85,5 @@ public class Meal extends AbstractEntity {
 
     public void setVendors(Set<Vendor> vendors) {
         this.vendors = vendors;
-    }
-
-    public List<MealChoice> getMealChoices() {
-        return mealChoices;
-    }
-
-    public void setMealChoices(List<MealChoice> mealChoices) {
-        this.mealChoices = mealChoices;
     }
 }
