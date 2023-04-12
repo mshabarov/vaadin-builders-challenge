@@ -9,6 +9,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import jakarta.annotation.security.PermitAll;
+import org.teamhq.components.DayComponent;
+import org.teamhq.data.entity.Meal;
 import org.teamhq.views.MainLayout;
 
 @PageTitle("Event")
@@ -17,21 +19,9 @@ import org.teamhq.views.MainLayout;
 @PermitAll
 public class EventView extends HorizontalLayout {
 
-    private TextField name;
-    private Button sayHello;
-
     public EventView() {
-        name = new TextField("Your name");
-        sayHello = new Button("Say hello");
-        sayHello.addClickListener(e -> {
-            Notification.show("Hello " + name.getValue());
-        });
-        sayHello.addClickShortcut(Key.ENTER);
-
-        setMargin(true);
-        setVerticalComponentAlignment(Alignment.END, name, sayHello);
-
-        add(name, sayHello);
+        DayComponent dayComponent = new DayComponent("Test title");
+        add(dayComponent);
     }
 
 }
