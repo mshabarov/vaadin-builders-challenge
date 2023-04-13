@@ -89,7 +89,7 @@ public class ReportDialog extends Dialog {
         if (exceptions.size() > 0) {
             Icon warningIcon = VaadinIcon.WARNING.create();
             warningIcon.addClassName("warning-sign");
-            layout.add();
+            layout.add(warningIcon);
             exceptions.stream().map(this::createExceptionSpan).forEach(layout::add);
         }
 
