@@ -14,7 +14,17 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import org.teamhq.data.entity.Meal;
+import org.teamhq.data.entity.MealChoice;
+import org.teamhq.data.entity.RsvpAnswer;
+import org.teamhq.data.entity.Vendor;
 import org.teamhq.data.service.MealChoiceService;
+
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ReportDialog extends Dialog {
     private final MealChoiceService mealChoiceService;

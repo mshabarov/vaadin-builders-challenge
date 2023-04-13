@@ -1,5 +1,22 @@
 package org.teamhq.components;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import org.teamhq.components.event.MealItem;
+import org.teamhq.data.entity.Event;
+import org.teamhq.data.entity.MealChoice;
+import org.teamhq.data.entity.RsvpAnswer;
+import org.teamhq.data.entity.User;
+import org.teamhq.data.repository.VendorRepository;
+import org.teamhq.data.service.MealChoiceService;
+import org.teamhq.data.service.MealService;
+import org.teamhq.security.AuthenticatedUser;
+import org.teamhq.views.event.dialog.MealDialog;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -7,26 +24,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.teamhq.components.event.MealItem;
-import org.teamhq.data.entity.Event;
-import org.teamhq.data.entity.MealChoice;
-import org.teamhq.data.entity.RsvpAnswer;
-import org.teamhq.data.entity.User;
-import org.teamhq.data.repository.MealRepository;
-import org.teamhq.data.repository.VendorRepository;
-
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import org.teamhq.data.repository.MealChoiceRepository;
-import org.teamhq.data.service.MealChoiceService;
-import org.teamhq.data.service.MealService;
-import org.teamhq.security.AuthenticatedUser;
-import org.teamhq.views.event.dialog.MealDialog;
 
 public class DayComponent extends VerticalLayout {
 

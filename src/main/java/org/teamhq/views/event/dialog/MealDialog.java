@@ -12,11 +12,9 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.function.SerializableConsumer;
-
 import org.teamhq.data.entity.Event;
 import org.teamhq.data.entity.Meal;
 import org.teamhq.data.entity.Vendor;
-import org.teamhq.data.repository.MealRepository;
 import org.teamhq.data.repository.VendorRepository;
 import org.teamhq.data.service.MealService;
 
@@ -134,8 +132,9 @@ public class MealDialog extends Dialog {
         mealBinder.forField(descriptionField).bind(Meal::getDescription, Meal::setDescription);
 
         freezeDateTimeField = new DateTimePicker("Latest possible RSVP time");
-        mealBinder.forField(freezeDateTimeField).asRequired("Freeze date is " +
-                                                            "mandatory").withValidator(mealDate.atTime(startField.getValue())::isAfter, "Freeze time should be before start time").bind(Meal::getFreezeDateTime, Meal::setFreezeDateTime);
+        mealBinder.forField(freezeDateTimeField).asRequired("Freeze date is mandatory")
+                .withValidator(freezeDateTime -> mealDate.atTime(startField.getValue()).isAfter(freezeDateTime), "Freeze time should be before start time")
+                .bind(Meal::getFreezeDateTime, Meal::setFreezeDateTime);
 
         vendorChoicesField = new MultiSelectComboBox<>("Vendor options");
         vendorChoicesField.setSizeFull();

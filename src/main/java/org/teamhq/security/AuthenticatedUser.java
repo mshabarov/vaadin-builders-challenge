@@ -1,11 +1,12 @@
 package org.teamhq.security;
 
 import com.vaadin.flow.spring.security.AuthenticationContext;
-import java.util.Optional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.teamhq.data.entity.User;
 import org.teamhq.data.repository.UserRepository;
+
+import java.util.Optional;
 
 @Component
 public class AuthenticatedUser {

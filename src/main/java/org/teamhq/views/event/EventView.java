@@ -1,29 +1,13 @@
 package org.teamhq.views.event;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.router.*;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.teamhq.components.DayComponent;
 import org.teamhq.components.event.MealItem;
-import org.teamhq.data.Role;
 import org.teamhq.data.entity.*;
-import org.teamhq.data.repository.EventRepository;
-import org.teamhq.data.repository.MealChoiceRepository;
-import org.teamhq.data.repository.MealRepository;
 import org.teamhq.data.repository.VendorRepository;
 import org.teamhq.data.service.EventService;
 import org.teamhq.data.service.MealChoiceService;
@@ -31,16 +15,14 @@ import org.teamhq.data.service.MealService;
 import org.teamhq.security.AuthenticatedUser;
 import org.teamhq.views.HomeView;
 import org.teamhq.views.MainLayout;
-
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.OptionalParameter;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
-import org.teamhq.views.event.dialog.AttendanceDialog;
 import org.teamhq.views.login.LoginView;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @PageTitle("Event")
 @Route(value = "event", layout = MainLayout.class)

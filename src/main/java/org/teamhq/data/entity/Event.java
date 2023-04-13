@@ -1,11 +1,11 @@
 package org.teamhq.data.entity;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotEmpty;
+
+import java.time.LocalDateTime;
 
 @Entity
 public class Event extends AbstractEntity {

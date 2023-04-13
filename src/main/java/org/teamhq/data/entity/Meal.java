@@ -1,12 +1,10 @@
 package org.teamhq.data.entity;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Set;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+
+import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 public class Meal extends AbstractEntity {

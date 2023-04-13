@@ -4,7 +4,11 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.ListItem;
+import com.vaadin.flow.component.html.UnorderedList;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -19,6 +23,7 @@ import org.teamhq.data.service.MealService;
 import org.teamhq.security.AuthenticatedUser;
 import org.vaadin.addons.taefi.component.ToggleButtonGroup;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -37,6 +42,7 @@ public class AttendanceDialog extends Dialog {
     private Meal meal;
     private final TextArea commentTextArea = new TextArea("Any special consideration?");
     private final VerticalLayout layout = new VerticalLayout();
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MMM.yyyy HH:mm");
 
     public AttendanceDialog(AuthenticatedUser authenticatedUser,
                             MealChoiceService mealChoiceService,
@@ -92,6 +98,14 @@ public class AttendanceDialog extends Dialog {
                 vendorBinder.refreshFields();
             }
         });
+
+
+        Label latestPossibleRsvpMessage = new Label("Please don't forget to RSVP before:");
+        latestPossibleRsvpMessage.getStyle().set("font-style", "italic");
+        Label latestPossibleRsvpTime = new Label(formatter.format(meal.getFreezeDateTime()));
+        latestPossibleRsvpTime.getStyle().set("font-weight", "bold");
+
+        layout.add(new HorizontalLayout(latestPossibleRsvpMessage, latestPossibleRsvpTime));
 
         layout.setSizeFull();
         add(layout);

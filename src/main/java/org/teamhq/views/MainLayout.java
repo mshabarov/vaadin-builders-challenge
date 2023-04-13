@@ -6,12 +6,7 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Footer;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -22,9 +17,6 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import java.io.ByteArrayInputStream;
-import java.util.Optional;
-
 import org.teamhq.components.event.EventDialog;
 import org.teamhq.data.Role;
 import org.teamhq.data.entity.Event;
@@ -33,6 +25,9 @@ import org.teamhq.data.service.EventService;
 import org.teamhq.security.AuthenticatedUser;
 import org.teamhq.views.event.EventView;
 import org.teamhq.views.profile.ProfileView;
+
+import java.io.ByteArrayInputStream;
+import java.util.Optional;
 
 /**
  * The main view is a top-level placeholder for other views.
