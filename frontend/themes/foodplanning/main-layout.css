@@ -14,3 +14,53 @@ vaadin-scroller[slot="drawer"] {
 [slot="drawer"]:is(header, footer):is(:empty) {
   display: none;
 }
+
+.menu-layout {
+  padding-left: 0;
+}
+.menu-layout a {
+  width: 100%;
+  color: var(--lumo-body-text-color);
+  text-decoration: none;
+  padding: var(--lumo-space-s);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  transition: background-color 300ms;
+}
+
+.menu-layout a span {
+  white-space: nowrap;
+}
+
+.menu-layout a vaadin-icon {
+  margin-left: var(--lumo-space-s);
+  margin-right: var(--lumo-space-m);
+  color: var(--lumo-header-text-color);
+  width: 20px;
+  height: 20px;
+}
+
+.menu-layout a:hover {
+  background-color: var(--lumo-shade-10pct);
+}
+
+.menu-layout a[highlight] {
+  background-color: var(--lumo-primary-color-10pct);
+}
+
+.menu-layout a::before {
+  border-radius: var(--lumo-border-radius);
+  content: '';
+  position: relative;
+  width: 4px;
+  height: var(--lumo-space-l);
+  transition: background-color 140ms;
+}
+
+.menu-layout a[highlight]::before {
+  background-color: var(--lumo-primary-color);
+  margin-right: var(--lumo-space-s);
+}
+
+

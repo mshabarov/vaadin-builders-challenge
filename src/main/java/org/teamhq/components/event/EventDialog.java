@@ -1,5 +1,6 @@
 package org.teamhq.components.event;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -18,6 +19,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.function.SerializableConsumer;
+import org.teamhq.data.service.EventService;
 
 public class EventDialog extends Dialog {
 
@@ -35,22 +37,22 @@ public class EventDialog extends Dialog {
 
     private SerializableConsumer<Event> onSave;
 
-    private EventRepository eventRepository;
+    private EventService eventService;
 
-    public EventDialog(EventRepository eventRepository,
+    public EventDialog(EventService eventService,
                        SerializableConsumer<Event> onSave) {
-        this.eventRepository = eventRepository;
+        this.eventService = eventService;
         this.onSave = onSave;
         eventName = new TextField("Event name");
         description = new TextArea("Event Description");
-        start = new DatePicker("Event Start time");
-        end = new DatePicker("Event End time");
+        start = new DatePicker("Event Start date");
+        end = new DatePicker("Event End date");
         save = new Button("Save", click -> saveEvent());
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Event event = new Event();
-        event.setStartDateTime(LocalDateTime.now());
-        event.setEndDateTime(LocalDateTime.now().plusDays(1));
+        event.setStartDateTime(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT));
+        event.setEndDateTime(LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.MIDNIGHT));
 
         binder = new Binder<>();
         binder.setBean(event);
@@ -85,10 +87,12 @@ public class EventDialog extends Dialog {
         setHeaderTitle("Add a new event");
         add(formLayout);
 
-        VerticalLayout buttonLayout = new VerticalLayout();
+        getFooter().removeAll();
+        getFooter().add(save);
+        /*VerticalLayout buttonLayout = new VerticalLayout();
         buttonLayout.setAlignItems(FlexComponent.Alignment.END);
         buttonLayout.add(save);
-        add(buttonLayout);
+        add(buttonLayout);*/
     }
 
     private void saveEvent() {
@@ -96,7 +100,7 @@ public class EventDialog extends Dialog {
             return;
         }
         Event event = binder.getBean();
-        eventRepository.saveAndFlush(event);
+        event = eventService.save(event);
         onSave.accept(event);
 
         close();

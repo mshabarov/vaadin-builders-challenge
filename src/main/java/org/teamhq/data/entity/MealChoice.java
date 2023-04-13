@@ -1,6 +1,8 @@
 package org.teamhq.data.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 
@@ -15,11 +17,13 @@ public class MealChoice extends AbstractEntity {
     @ManyToOne
     private Meal meal;
 
-    @NotNull
     @ManyToOne
     private Vendor vendor;
 
     private String comment;
+
+    @Enumerated(EnumType.STRING)
+    private RsvpAnswer answer;
 
     public String getComment() {
         return comment;
@@ -27,6 +31,14 @@ public class MealChoice extends AbstractEntity {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public RsvpAnswer getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(RsvpAnswer answer) {
+        this.answer = answer;
     }
 
     public User getUser() {

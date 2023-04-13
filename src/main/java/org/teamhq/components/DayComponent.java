@@ -5,10 +5,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.teamhq.components.event.MealItem;
 import org.teamhq.data.entity.Event;
+import org.teamhq.data.entity.MealChoice;
+import org.teamhq.data.entity.RsvpAnswer;
+import org.teamhq.data.entity.User;
 import org.teamhq.data.repository.MealRepository;
 import org.teamhq.data.repository.VendorRepository;
 
@@ -19,6 +23,9 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.teamhq.data.repository.MealChoiceRepository;
+import org.teamhq.data.service.MealChoiceService;
+import org.teamhq.data.service.MealService;
+import org.teamhq.security.AuthenticatedUser;
 import org.teamhq.views.event.dialog.MealDialog;
 
 public class DayComponent extends VerticalLayout {
@@ -34,30 +41,38 @@ public class DayComponent extends VerticalLayout {
 
     private VerticalLayout mealsContainer;
 
-    private VendorRepository vendorRepository;
+    private final VendorRepository vendorRepository;
 
-    private MealRepository mealRepository;
+    private final MealService mealService;
 
-    private MealChoiceRepository mealChoiceRepository;
+    private final MealChoiceService mealChoiceService;
+
+    private final AuthenticatedUser authenticatedUser;
 
     public DayComponent(VendorRepository vendorRepository,
-                        MealRepository mealRepository, MealChoiceRepository mealChoiceRepository, LocalDate date,
+                        MealService mealService, MealChoiceService mealChoiceService, LocalDate date,
                         Event event,
-                        Collection<MealItem> meals) {
+                        Collection<MealItem> meals,
+                        AuthenticatedUser authenticatedUser) {
         this.vendorRepository = vendorRepository;
-        this.mealRepository = mealRepository;
-        this.mealChoiceRepository = mealChoiceRepository;
+        this.mealService = mealService;
+        this.mealChoiceService = mealChoiceService;
+        this.authenticatedUser = authenticatedUser;
         this.date = date;
         Icon addIcon = new Icon(VaadinIcon.PLUS);
         addButton = new Button(addIcon);
+        User currentUser = authenticatedUser.require();
         addButton.addClickListener(click -> {
             MealDialog mealDialog = new MealDialog(vendorRepository,
                     // TODO: remove callback
-                    mealRepository, event, date, m -> {
+                    mealService, event, date, m -> {
+                var mealChoice = mealChoiceService.getMealChoiceByMealAndUser(m, currentUser);
                 MealItem mealItem = new MealItem(vendorRepository,
-                        mealRepository,
-                        mealChoiceRepository, m,
-                        false);
+                        mealService,
+                        mealChoiceService,
+                        m,
+                        RsvpAnswer.YES.equals(Optional.ofNullable(mealChoice).map(MealChoice::getAnswer).orElse(RsvpAnswer.NO)),
+                        authenticatedUser);
                 addMeal(mealItem);
             });
             mealDialog.open();
@@ -95,7 +110,7 @@ public class DayComponent extends VerticalLayout {
             mealsContainer.removeAll();
             mealsContainer.add(meals);
 
-            if (mealsContainer.getComponentCount() == 5) {
+            if (mealsContainer.getComponentCount() == MAX_MEALS) {
                 addButton.setEnabled(false);
             }
         } else {

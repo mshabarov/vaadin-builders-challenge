@@ -6,7 +6,3 @@ insert into application_user (version, id, username,name,hashed_password,
 insert into user_roles (user_id, roles) values ('2', 'USER');
 insert into user_roles (user_id, roles) values ('2', 'ADMIN');
 
-insert into event (version, id, name, description) values (1, '1', 'e', 'e');
-insert into meal (version, id, name, description, start_time, end_time) values
-                                                                          (1,
-                                                                           '1', 'm', 'm', TIME '18:31:38', TIME '18:31:38');

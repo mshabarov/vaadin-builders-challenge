@@ -1,6 +1,8 @@
 @import url('./main-layout.css');
 @import url('./meal-card.css');
 @import url('./day-component.css');
+@import url('./attendance-dialog.css');
+@import url('./report-dialog.css');
 
 .board {
     display: flex;

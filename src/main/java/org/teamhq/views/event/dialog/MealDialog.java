@@ -1,6 +1,7 @@
 package org.teamhq.views.event.dialog;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -17,6 +18,7 @@ import org.teamhq.data.entity.Meal;
 import org.teamhq.data.entity.Vendor;
 import org.teamhq.data.repository.MealRepository;
 import org.teamhq.data.repository.VendorRepository;
+import org.teamhq.data.service.MealService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,11 +30,11 @@ import java.util.Set;
 
 public class MealDialog extends Dialog {
 
-    private VendorRepository vendorRepository;
+    private final VendorRepository vendorRepository;
 
-    private MealRepository mealRepository;
+    private final MealService mealService;
 
-    private MealUpdateMode mealUpdateMode;
+    private final MealUpdateMode mealUpdateMode;
 
     private LocalDate mealDate;
 
@@ -56,10 +58,10 @@ public class MealDialog extends Dialog {
 
 
     public MealDialog(VendorRepository vendorRepository,
-                      MealRepository mealRepository, LocalDate mealDate,
+                      MealService mealService, LocalDate mealDate,
                       Meal meal, SerializableConsumer<Meal> onSave) {
         this.vendorRepository = vendorRepository;
-        this.mealRepository = mealRepository;
+        this.mealService = mealService;
         this.mealDate = mealDate;
         mealUpdateMode = MealUpdateMode.EDIT;
         this.onSave = onSave;
@@ -67,10 +69,10 @@ public class MealDialog extends Dialog {
     }
 
     public MealDialog(VendorRepository vendorRepository,
-                      MealRepository mealRepository, Event event,
+                      MealService mealService, Event event,
                       LocalDate mealDate, SerializableConsumer<Meal> onSave) {
         this.vendorRepository = vendorRepository;
-        this.mealRepository = mealRepository;
+        this.mealService = mealService;
         this.mealDate = mealDate;
         mealUpdateMode = MealUpdateMode.CREATE;
         this.onSave = onSave;
@@ -131,7 +133,7 @@ public class MealDialog extends Dialog {
         descriptionField = new TextArea("Description");
         mealBinder.forField(descriptionField).bind(Meal::getDescription, Meal::setDescription);
 
-        freezeDateTimeField = new DateTimePicker("Active until");
+        freezeDateTimeField = new DateTimePicker("Latest possible RSVP time");
         mealBinder.forField(freezeDateTimeField).asRequired("Freeze date is " +
                                                             "mandatory").withValidator(mealDate.atTime(startField.getValue())::isAfter, "Freeze time should be before start time").bind(Meal::getFreezeDateTime, Meal::setFreezeDateTime);
 
@@ -147,18 +149,20 @@ public class MealDialog extends Dialog {
             vendorChoices.add(customVendor);
             vendorChoicesField.setValue(vendorChoices);
         });
+        vendorChoicesField.setValue(meal.getVendors());
 
         saveMealButton = new Button("Save meal", click -> saveMeal());
+        saveMealButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
     }
 
     public void saveMeal() {
         if (mealBinder.validate().hasErrors()) {
             return;
         }
-        List<Vendor> vendors = saveNewVendors();
+        saveNewVendors();
         Meal meal = mealBinder.getBean();
-        meal.setVendors(new HashSet<>(vendors));
-//        mealRepository.saveAndFlush(meal);
+        meal.setVendors(new HashSet<>(vendorChoicesField.getValue()));
+        meal = mealService.save(meal);
         onSave.accept(meal);
         close();
     }

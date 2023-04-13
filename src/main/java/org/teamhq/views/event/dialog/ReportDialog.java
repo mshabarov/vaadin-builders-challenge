@@ -7,11 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.teamhq.data.entity.Meal;
-import org.teamhq.data.entity.MealChoice;
-import org.teamhq.data.entity.User;
-import org.teamhq.data.entity.Vendor;
-import org.teamhq.data.repository.MealChoiceRepository;
+import org.teamhq.data.entity.*;
 
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H1;
@@ -19,12 +15,13 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import org.teamhq.data.service.MealChoiceService;
 
 public class ReportDialog extends Dialog {
-    private final MealChoiceRepository mealChoiceRepository;
+    private final MealChoiceService mealChoiceService;
 
-    public ReportDialog(MealChoiceRepository mealChoiceRepository) {
-        this.mealChoiceRepository = mealChoiceRepository;
+    public ReportDialog(MealChoiceService mealChoiceService) {
+        this.mealChoiceService = mealChoiceService;
     }
 
     public void open(Meal meal) {
@@ -34,32 +31,9 @@ public class ReportDialog extends Dialog {
 
     private void initUI(Meal meal) {
         initHeader(meal);
-//        List<MealChoice> mealChoicesByMeal = mealChoiceRepository.getMealChoicesByMeal(meal);
-        MealChoice mealChoice = new MealChoice();
-        mealChoice.setMeal(meal);
-        mealChoice.setComment("Lactose free");
-        Vendor pizza = new Vendor();
-        pizza.setName("Koti Pizza");
-        mealChoice.setVendor(pizza);
-
-        MealChoice mealChoice2 = new MealChoice();
-        mealChoice2.setMeal(meal);
-        Vendor taco = new Vendor();
-        taco.setName("Taco Bell");
-        mealChoice2.setVendor(taco);
-
-        User user = new User();
-        user.setEmail("user@vaadin.com");
-        user.setName("John Doe");
-        mealChoice.setUser(user);
-
-        User user2 = new User();
-        user2.setEmail("elon@tesla.com");
-        user2.setName("Elon Musk");
-        mealChoice2.setUser(user2);
-
-        List<MealChoice> mealChoicesByMeal = Arrays.asList(mealChoice,
-                mealChoice2);
+        List<MealChoice> mealChoicesByMeal = mealChoiceService.getMealChoicesByMeal(meal)
+                .stream().filter(mealChoice -> RsvpAnswer.YES.equals(mealChoice.getAnswer()))
+                .toList();
 
         if (mealChoicesByMeal == null || mealChoicesByMeal.isEmpty()) {
             addNoAttendeesLayout();
@@ -113,7 +87,9 @@ public class ReportDialog extends Dialog {
         }
 
         if (exceptions.size() > 0) {
-            layout.add(new Icon(VaadinIcon.WARNING));
+            Icon warningIcon = VaadinIcon.WARNING.create();
+            warningIcon.addClassName("warning-sign");
+            layout.add();
             exceptions.stream().map(this::createExceptionSpan).forEach(layout::add);
         }
 

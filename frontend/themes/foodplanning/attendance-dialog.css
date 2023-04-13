@@ -1,0 +1,14 @@
+.toggle-group-answer-yes {
+    color: #18900EEF;
+    background-color: #93EA8180;
+}
+
+.toggle-group-answer-maybe {
+    color: #18273AEF;
+    background-color: #43434833;
+}
+
+.toggle-group-answer-no {
+    color: #760101EF;
+    background-color: #EF608280;
+}

@@ -25,16 +25,14 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import java.io.ByteArrayInputStream;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.teamhq.components.appnav.AppNav;
-import org.teamhq.components.appnav.AppNavItem;
 import org.teamhq.components.event.EventDialog;
+import org.teamhq.data.Role;
+import org.teamhq.data.entity.Event;
 import org.teamhq.data.entity.User;
-import org.teamhq.data.repository.EventRepository;
+import org.teamhq.data.service.EventService;
 import org.teamhq.security.AuthenticatedUser;
 import org.teamhq.views.event.EventView;
 import org.teamhq.views.profile.ProfileView;
-import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -43,15 +41,18 @@ public class MainLayout extends AppLayout {
 
     private H2 viewTitle;
 
-    private AuthenticatedUser authenticatedUser;
-    private AccessAnnotationChecker accessChecker;
+    private final AuthenticatedUser authenticatedUser;
+    private final AccessAnnotationChecker accessChecker;
 
-    @Autowired
-    private EventRepository eventRepository;
+    private final VerticalLayout eventMenu = new VerticalLayout();
 
-    public MainLayout(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker) {
+
+    private final EventService eventService;
+
+    public MainLayout(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker, EventService eventService) {
         this.authenticatedUser = authenticatedUser;
         this.accessChecker = accessChecker;
+        this.eventService = eventService;
 
         setPrimarySection(Section.DRAWER);
         addDrawerContent();
@@ -69,38 +70,32 @@ public class MainLayout extends AppLayout {
     }
 
     private void addDrawerContent() {
+        eventMenu.removeAll();
+        eventMenu.addClassName("menu-layout");
+        Scroller scroller = new Scroller(eventMenu);
+
         H1 appName = new H1("Food Planning");
         appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
         Header header = new Header(appName);
 
-        VerticalLayout eventList = new VerticalLayout();
-        Scroller scroller = new Scroller(eventList);
-
         Button addNewEvent = new Button("Add new event", new Icon(VaadinIcon.PLUS));
+        addNewEvent.setVisible(false);
         addNewEvent.setWidthFull();
         addNewEvent.addClickListener(click -> {
-            EventDialog dialog = new EventDialog(eventRepository, event -> {
-                RouterLink eventLink = new RouterLink(event.getName(), EventView.class,
-                        event.getId());
-                eventList.add(eventLink);
-            });
+            EventDialog dialog = new EventDialog(eventService, this::addRouterLinkToMenu);
             dialog.open();
         });
+        authenticatedUser.get().ifPresent(user -> addNewEvent.setVisible(user.getRoles().contains(Role.ADMIN)));
 
         addToDrawer(header, addNewEvent, scroller, createFooter());
+
+        eventService.findAll().forEach(this::addRouterLinkToMenu);
     }
 
-    private AppNav createNavigation() {
-        // AppNav is not yet an official component.
-        // For documentation, visit https://github.com/vaadin/vcf-nav#readme
-        AppNav nav = new AppNav();
-
-        if (accessChecker.hasAccess(EventView.class)) {
-            nav.addItem(new AppNavItem("Event", EventView.class, LineAwesomeIcon.GLOBE_SOLID.create()));
-
-        }
-
-        return nav;
+    private void addRouterLinkToMenu(Event event) {
+        RouterLink eventLink = new RouterLink(event.getName(), EventView.class,
+                event.getId());
+        eventMenu.add(eventLink);
     }
 
     private Footer createFooter() {
