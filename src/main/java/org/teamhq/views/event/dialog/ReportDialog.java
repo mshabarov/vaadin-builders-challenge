@@ -2,7 +2,6 @@ package org.teamhq.views.event.dialog;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +80,8 @@ public class ReportDialog extends Dialog {
         for (MealChoice choice : choices) {
             String globalException = choice.getUser().getComment();
             String localException = choice.getComment();
-            if (globalException != null || localException != null) {
+            if ((globalException != null && !"".equals(globalException.trim())) ||
+                    (localException != null && !"".equals(localException.trim()))) {
                 exceptions.add(choice);
             }
         }
@@ -109,7 +109,8 @@ public class ReportDialog extends Dialog {
                     vendorCounts.getOrDefault(choice.getVendor(), 0);
             count++;
             vendorCounts.put(choice.getVendor(), count);
-            if (globalException != null || localException != null) {
+            if ((globalException != null && !"".equals(globalException.trim())) ||
+                    (localException != null && !"".equals(localException.trim()))) {
                 List<MealChoice> vendorChoices =
                         vendorExceptions.getOrDefault(choice.getVendor(),
                                 new ArrayList<>());
@@ -125,8 +126,10 @@ public class ReportDialog extends Dialog {
             layout.add(vendorTitle);
 
             List<MealChoice> vendorChoices = vendorExceptions.get(vendor);
-            if (vendorChoices.size() > 0) {
-                layout.add(new Icon(VaadinIcon.WARNING));
+            if (vendorChoices != null && vendorChoices.size() > 0) {
+                Icon warningIcon = VaadinIcon.WARNING.create();
+                warningIcon.addClassName("warning-sign");
+                layout.add(warningIcon);
                 vendorChoices.stream().map(this::createExceptionSpan).forEach(layout::add);
             }
         }
